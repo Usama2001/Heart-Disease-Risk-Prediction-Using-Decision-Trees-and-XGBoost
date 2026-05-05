@@ -5,3 +5,6 @@ __pycache__/
 models/*.pkl
 
 Code explantion.docx
+
+# Private local notes
+private_notes/
