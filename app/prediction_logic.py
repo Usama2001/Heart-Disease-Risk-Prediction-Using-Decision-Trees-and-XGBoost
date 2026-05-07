@@ -27,7 +27,7 @@ def predict_heart_disease_risk(patient_data, model, feature_names):
     return int(prediction), float(probability), patient_df
 
 
-def get_risk_details(prediction, probability):
+def get_risk_details(probability):
     probability_percent = probability * 100
 
     if probability < 0.40:

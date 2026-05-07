@@ -13,45 +13,37 @@ from prediction_logic import (
 )
 
 
-# --------------------------------------------------
-# Page Configuration
-# --------------------------------------------------
 st.set_page_config(
     page_title="Heart Disease Risk Prediction",
     page_icon="❤️",
     layout="wide",
 )
 
-
-# --------------------------------------------------
-# Project Path
-# --------------------------------------------------
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
 
-# --------------------------------------------------
-# Custom CSS
-# --------------------------------------------------
+# -------------------------------
+# CSS
+# -------------------------------
 st.markdown(
     dedent(
         """
         <style>
         .block-container {
-            padding-top: 7.5rem;
+            padding-top: 1rem;
             padding-bottom: 2rem;
             max-width: 1180px;
         }
 
-        .fixed-header {
-            position: fixed;
+        .sticky-header {
+            position: sticky;
             top: 0;
-            left: 18rem;
-            right: 0;
-            z-index: 999999;
+            z-index: 9999;
             background: rgba(14, 17, 23, 0.98);
-            backdrop-filter: blur(12px);
+            backdrop-filter: blur(10px);
             border-bottom: 1px solid #1F2937;
-            padding: 20px 40px 18px 40px;
+            padding: 18px 10px 18px 10px;
+            margin-bottom: 26px;
             text-align: center;
         }
 
@@ -82,7 +74,6 @@ st.markdown(
             border-radius: 18px;
             border: 1px solid #374151;
             margin-bottom: 20px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.18);
         }
 
         .info-card h3 {
@@ -117,7 +108,6 @@ st.markdown(
             border-radius: 20px;
             border: 1px solid #10B981;
             color: white;
-            box-shadow: 0 12px 30px rgba(16, 185, 129, 0.16);
             margin-bottom: 16px;
         }
 
@@ -127,7 +117,6 @@ st.markdown(
             border-radius: 20px;
             border: 1px solid #F59E0B;
             color: white;
-            box-shadow: 0 12px 30px rgba(245, 158, 11, 0.16);
             margin-bottom: 16px;
         }
 
@@ -137,7 +126,6 @@ st.markdown(
             border-radius: 20px;
             border: 1px solid #EF4444;
             color: white;
-            box-shadow: 0 12px 30px rgba(239, 68, 68, 0.16);
             margin-bottom: 16px;
         }
 
@@ -177,30 +165,6 @@ st.markdown(
             font-weight: 750;
         }
 
-        .guide-card {
-            background: #111827;
-            border: 1px solid #374151;
-            border-radius: 18px;
-            padding: 28px;
-            margin-top: 16px;
-            margin-bottom: 26px;
-        }
-
-        .guide-card h4 {
-            color: #FFFFFF;
-            margin-top: 18px;
-            margin-bottom: 8px;
-        }
-
-        .guide-card ul {
-            color: #E5E7EB;
-            line-height: 1.8;
-        }
-
-        .guide-card li {
-            margin-bottom: 6px;
-        }
-
         .why-card {
             background: linear-gradient(135deg, #172554, #1E3A8A);
             border: 1px solid #3B82F6;
@@ -220,77 +184,6 @@ st.markdown(
             line-height: 1.7;
         }
 
-        .footer-card {
-            background: linear-gradient(135deg, #111827, #1F2937);
-            border: 1px solid #374151;
-            border-radius: 22px;
-            padding: 26px;
-            margin-top: 40px;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 24px;
-        }
-
-        .footer-image-box {
-            flex-shrink: 0;
-        }
-
-        .profile-img {
-            width: 92px;
-            height: 92px;
-            border-radius: 50%;
-            object-fit: cover;
-            border: 2px solid #3B82F6;
-            background: white;
-        }
-
-        .profile-placeholder {
-            width: 92px;
-            height: 92px;
-            border-radius: 50%;
-            border: 2px solid #3B82F6;
-            background: #E5E7EB;
-            color: #111827;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 850;
-            font-size: 26px;
-        }
-
-        .footer-name {
-            font-size: 24px;
-            font-weight: 800;
-            color: #FFFFFF;
-            margin-bottom: 4px;
-        }
-
-        .footer-role {
-            color: #D1D5DB;
-            font-size: 15px;
-            margin-bottom: 10px;
-        }
-
-        .footer-links a {
-            color: #60A5FA;
-            text-decoration: none;
-            margin-right: 18px;
-            font-weight: 650;
-        }
-
-        .footer-links a:hover {
-            color: #93C5FD;
-            text-decoration: underline;
-        }
-
-        .footer-note {
-            color: #9CA3AF;
-            font-size: 13.5px;
-            margin-top: 10px;
-            line-height: 1.6;
-        }
-
         div[data-testid="stSidebar"] {
             background-color: #111827;
         }
@@ -300,40 +193,16 @@ st.markdown(
         div[data-testid="stSidebar"] h3 {
             color: white;
         }
-
-        @media screen and (max-width: 900px) {
-            .fixed-header {
-                left: 0;
-                padding: 16px 16px;
-            }
-
-            .main-title {
-                font-size: 28px;
-            }
-
-            .subtitle {
-                font-size: 14px;
-            }
-
-            .block-container {
-                padding-top: 7rem;
-            }
-
-            .footer-card {
-                flex-direction: column;
-                text-align: center;
-            }
-        }
         </style>
         """
-    ),
+    ).strip(),
     unsafe_allow_html=True,
 )
 
 
-# --------------------------------------------------
-# Load Model
-# --------------------------------------------------
+# -------------------------------
+# Load model
+# -------------------------------
 try:
     model, feature_names = load_model_and_features()
 except FileNotFoundError:
@@ -343,9 +212,9 @@ except FileNotFoundError:
     st.stop()
 
 
-# --------------------------------------------------
-# Sidebar Inputs
-# --------------------------------------------------
+# -------------------------------
+# Sidebar inputs
+# -------------------------------
 st.sidebar.title("Patient Input Panel")
 st.sidebar.write("Enter patient medical information below.")
 
@@ -445,7 +314,6 @@ thal_mapping = {
 }
 thal = thal_mapping[thal_label]
 
-
 patient_data = {
     "age": age,
     "sex": sex,
@@ -463,15 +331,15 @@ patient_data = {
 }
 
 
-# --------------------------------------------------
+# -------------------------------
 # Header
-# --------------------------------------------------
+# -------------------------------
 render_header()
 
 
-# --------------------------------------------------
-# Project Overview
-# --------------------------------------------------
+# -------------------------------
+# Project overview
+# -------------------------------
 st.markdown(
     dedent(
         """
@@ -487,7 +355,7 @@ st.markdown(
             </p>
         </div>
         """
-    ),
+    ).strip(),
     unsafe_allow_html=True,
 )
 
@@ -499,14 +367,14 @@ st.markdown(
             It should not be used as a real medical diagnosis tool.
         </div>
         """
-    ),
+    ).strip(),
     unsafe_allow_html=True,
 )
 
 
-# --------------------------------------------------
-# Prediction Panel
-# --------------------------------------------------
+# -------------------------------
+# Prediction panel
+# -------------------------------
 st.markdown(
     '<div class="section-title">Prediction Panel</div>',
     unsafe_allow_html=True,
@@ -543,7 +411,7 @@ else:
     probability = st.session_state.prediction_result["probability"]
     model_input_df = st.session_state.prediction_result["model_input_df"]
 
-    risk_details = get_risk_details(prediction, probability)
+    risk_details = get_risk_details(probability)
 
     risk_level = risk_details["risk_level"]
     risk_message = risk_details["risk_message"]
@@ -559,7 +427,7 @@ else:
                 <p>Estimated heart disease risk probability</p>
             </div>
             """
-        ),
+        ).strip(),
         unsafe_allow_html=True,
     )
 
@@ -576,7 +444,7 @@ else:
                     <div class="metric-value">{risk_level}</div>
                 </div>
                 """
-            ),
+            ).strip(),
             unsafe_allow_html=True,
         )
 
@@ -589,7 +457,7 @@ else:
                     <div class="metric-value">{prediction}</div>
                 </div>
                 """
-            ),
+            ).strip(),
             unsafe_allow_html=True,
         )
 
@@ -602,7 +470,7 @@ else:
                     <div class="metric-value">{probability_percent:.2f}%</div>
                 </div>
                 """
-            ),
+            ).strip(),
             unsafe_allow_html=True,
         )
 
@@ -614,55 +482,43 @@ else:
     )
 
 
-# --------------------------------------------------
-# Feature Meaning Guide
-# --------------------------------------------------
+# -------------------------------
+# Feature meaning guide
+# -------------------------------
 st.markdown(
     '<div class="section-title">Feature Meaning Guide</div>',
     unsafe_allow_html=True,
 )
 
-st.markdown(
-    dedent(
+with st.container(border=True):
+    st.markdown("### Chest Pain Type")
+    st.markdown(
         """
-        <div class="guide-card">
-            <h4>Chest Pain Type</h4>
-            <ul>
-                <li><b>Typical Angina:</b> chest pain commonly related to heart disease.</li>
-                <li><b>Atypical Angina:</b> chest pain that is not fully typical.</li>
-                <li><b>Non-Anginal Pain:</b> chest pain usually not caused by heart disease.</li>
-                <li><b>Asymptomatic:</b> no clear chest pain symptoms.</li>
-            </ul>
-
-            <h4>Exercise Induced Angina</h4>
-            <ul>
-                <li>Shows whether chest pain occurs during exercise.</li>
-            </ul>
-
-            <h4>Oldpeak</h4>
-            <ul>
-                <li>ST depression value from exercise test. Higher values may show heart stress.</li>
-            </ul>
-
-            <h4>CA</h4>
-            <ul>
-                <li>Number of major blood vessels visible through fluoroscopy.</li>
-            </ul>
-
-            <h4>Thalassemia</h4>
-            <ul>
-                <li>A blood-related test category used in the dataset.</li>
-            </ul>
-        </div>
+        - **Typical Angina:** chest pain commonly related to heart disease.
+        - **Atypical Angina:** chest pain that is not fully typical.
+        - **Non-Anginal Pain:** chest pain usually not caused by heart disease.
+        - **Asymptomatic:** no clear chest pain symptoms.
         """
-    ),
-    unsafe_allow_html=True,
-)
+    )
+
+    st.markdown("### Exercise Induced Angina")
+    st.markdown("- Shows whether chest pain occurs during exercise.")
+
+    st.markdown("### Oldpeak")
+    st.markdown(
+        "- ST depression value from exercise test. Higher values may show heart stress."
+    )
+
+    st.markdown("### CA")
+    st.markdown("- Number of major blood vessels visible through fluoroscopy.")
+
+    st.markdown("### Thalassemia")
+    st.markdown("- A blood-related test category used in the dataset.")
 
 
-# --------------------------------------------------
-# Model Performance Summary
-# --------------------------------------------------
+# -------------------------------
+# Model performance summary
+# -------------------------------
 st.markdown(
     '<div class="section-title">Model Performance Summary</div>',
     unsafe_allow_html=True,
@@ -693,12 +549,12 @@ st.markdown(
             </p>
         </div>
         """
-    ),
+    ).strip(),
     unsafe_allow_html=True,
 )
 
 
-# --------------------------------------------------
+# -------------------------------
 # Footer
-# --------------------------------------------------
+# -------------------------------
 render_footer(PROJECT_ROOT)
