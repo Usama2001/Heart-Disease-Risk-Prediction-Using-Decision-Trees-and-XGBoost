@@ -37,7 +37,7 @@ st.markdown(
 
         .sticky-header {
             position: sticky;
-            top: 0;
+            top: -16px;
             z-index: 9999;
             background: rgba(14, 17, 23, 0.98);
             backdrop-filter: blur(10px);
@@ -53,7 +53,8 @@ st.markdown(
             color: #FFFFFF;
             margin-bottom: 6px;
             line-height: 1.15;
-        }
+            padding: 20px;            
+            border-bottom: 3px solid #10B981;        }
 
         .subtitle {
             font-size: 16px;
@@ -475,7 +476,11 @@ else:
         )
 
     with st.expander("View Data Sent to Model"):
-        st.dataframe(model_input_df, use_container_width=True)
+     st.dataframe(
+        model_input_df.reset_index(drop=True),
+        use_container_width=True,
+        hide_index=True
+    )
 
     st.info(
         "The model uses the same feature order that was saved during training to avoid prediction errors."

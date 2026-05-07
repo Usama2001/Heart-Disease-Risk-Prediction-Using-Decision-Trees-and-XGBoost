@@ -33,24 +33,27 @@ def render_footer(project_root: Path):
     st.markdown("---")
 
     with st.container(border=True):
-        col_img, col_info = st.columns([1, 5])
+        col_img, col_info = st.columns([1, 5], vertical_alignment="center")
 
         with col_img:
             if profile_image:
-                st.image(str(profile_image), width=95)
+                st.image(
+                    str(profile_image),
+                    width=500
+                )
             else:
                 st.markdown(
                     """
                     <div style="
-                        width:150px;
-                        height:200px;
+                        width:500px;
+                        height:500px;
                         border-radius:50%;
                         background:#E5E7EB;
                         color:#111827;
                         display:flex;
                         align-items:center;
                         justify-content:center;
-                        font-size:28px;
+                        font-size:24px;
                         font-weight:800;
                         border:2px solid #3B82F6;
                     ">
@@ -63,10 +66,10 @@ def render_footer(project_root: Path):
         with col_info:
             st.markdown("### Usama Fiaz")
             st.markdown(
-                "**AI Engineer** | Machine Learning | NLP | LangGraph | AI Agents"
+                "**AI Engineer** | Machine Learning | NLP | Neural Networks | Supervised Learning | Unsupervised Learning | Deep Learning | Data Science"
             )
 
-            link_col1, link_col2 = st.columns([1, 1])
+            link_col1, link_col2, link_col3 = st.columns([1.1, 1.1, 3])
 
             with link_col1:
                 st.link_button(
@@ -81,6 +84,9 @@ def render_footer(project_root: Path):
                     "https://www.linkedin.com/in/usama2001/",
                     use_container_width=True,
                 )
+
+            with link_col3:
+                st.write("")
 
             st.caption(
                 "Portfolio ML project built using Python, Scikit-learn, XGBoost, and Streamlit. "
