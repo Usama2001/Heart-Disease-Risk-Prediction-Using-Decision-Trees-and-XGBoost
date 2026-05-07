@@ -238,27 +238,6 @@ The app allows users to enter patient information and generate a heart disease r
 - Medical disclaimer
 - Footer with portfolio/contact links
 
-### Streamlit App Screenshots
-
-Add your app screenshots in this folder:
-
-```text
-reports/figures/
-```
-
-Recommended screenshot names:
-
-```text
-streamlit_app_home.png
-streamlit_prediction_result.png
-```
-
-Then they will show here:
-
-![Streamlit App Home](reports/figures/streamlit_app_home.png)
-
-![Streamlit Prediction Result](reports/figures/streamlit_prediction_result.png)
-
 ---
 
 ## Project Structure
@@ -391,7 +370,7 @@ Possible future improvements include:
 ## Author
 
 **Usama Fiaz**  
-AI Engineer | Machine Learning | NLP | LangGraph | AI Agents  
+AI Engineer | Machine Learning | NLP | Neural Networks | Supervised Learning | Unsupervised Learning | Deep Learning | Data Science
 
 Email: usama20010101@gmail.com  
 LinkedIn: https://www.linkedin.com/in/usama2001/
