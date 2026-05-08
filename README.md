@@ -367,6 +367,14 @@ Possible future improvements include:
 
 ---
 
+## ROC-AUC Curve
+
+![ROC-AUC Curve](reports/figures/roc_auc_curve_comparison.png)
+
+ROC-AUC was used to evaluate how well each model separates heart disease and no-heart-disease cases across different thresholds. A higher AUC score means better class separation.
+
+---
+
 ## Author
 
 **Usama Fiaz**  
