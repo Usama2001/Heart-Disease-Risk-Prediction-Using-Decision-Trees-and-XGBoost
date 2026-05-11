@@ -351,19 +351,13 @@ Any real medical decision should always be made by qualified healthcare professi
 
 ---
 
-## Future Improvements
+## Final App Threshold
 
-Possible future improvements include:
+The Streamlit app uses a tuned prediction threshold of **0.30** instead of the default 0.50.
 
-- Hyperparameter tuning for XGBoost
-- Cross-validation
-- ROC-AUC curve
-- Threshold tuning to improve recall
-- SHAP explainability
-- Better feature descriptions in the app
-- Deploying the Streamlit app online
-- Adding a training script to regenerate the model
-- Adding model versioning
+This threshold was selected because it improved recall from **78.57%** to **92.86%** and reduced false negatives from **6** to **2**.
+
+This is useful for a medical-risk screening project because missing actual heart disease cases is more risky than giving extra warning cases.
 
 ---
 
