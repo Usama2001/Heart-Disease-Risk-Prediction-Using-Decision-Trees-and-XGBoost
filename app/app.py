@@ -1,13 +1,12 @@
 from pathlib import Path
 from textwrap import dedent
 
+import matplotlib.pyplot as plt
 import pandas as pd
 import streamlit as st
 
-from footer import render_footer
 from header import render_header
 from prediction_logic import (
-    get_risk_details,
     load_model_and_features,
     predict_heart_disease_risk,
 )
@@ -20,6 +19,135 @@ st.set_page_config(
 )
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
+TUNED_THRESHOLD = 0.30
+
+
+# -------------------------------
+# Helper: Find profile image
+# -------------------------------
+def find_profile_image(project_root: Path):
+    image_folder = project_root / "assets"
+
+    possible_files = [
+        image_folder / "usama_profile.png",
+        image_folder / "usama_profile.jpg",
+        image_folder / "profile.png",
+        image_folder / "profile.jpg",
+        image_folder / "IMG_9152.png",
+    ]
+
+    for file_path in possible_files:
+        if file_path.exists():
+            return file_path
+
+    if image_folder.exists():
+        for extension in ["*.png", "*.jpg", "*.jpeg"]:
+            image_files = list(image_folder.glob(extension))
+            if image_files:
+                return image_files[0]
+
+    return None
+
+
+# -------------------------------
+# Helper: Risk details using tuned threshold
+# -------------------------------
+def get_app_risk_details(probability: float):
+    probability_percent = probability * 100
+
+    if probability < TUNED_THRESHOLD:
+        return {
+            "prediction": 0,
+            "risk_level": "Low Risk",
+            "risk_message": "Prediction: Low Heart Disease Risk",
+            "card_class": "prediction-card-low",
+            "probability_percent": probability_percent,
+        }
+
+    if probability < 0.70:
+        return {
+            "prediction": 1,
+            "risk_level": "Moderate Risk",
+            "risk_message": "Prediction: Moderate Heart Disease Risk",
+            "card_class": "prediction-card-medium",
+            "probability_percent": probability_percent,
+        }
+
+    return {
+        "prediction": 1,
+        "risk_level": "High Risk",
+        "risk_message": "Prediction: Heart Disease Risk",
+        "card_class": "prediction-card-high",
+        "probability_percent": probability_percent,
+    }
+
+
+# -------------------------------
+# Helper: Footer
+# -------------------------------
+def render_clean_footer(project_root: Path):
+    profile_image = find_profile_image(project_root)
+
+    st.markdown("---")
+
+    with st.container(border=True):
+        col_img, col_info = st.columns([0.8, 5.2], vertical_alignment="center")
+
+        with col_img:
+            if profile_image:
+                st.image(str(profile_image), width=76)
+            else:
+                st.markdown(
+                    """
+                    <div style="
+                        width:76px;
+                        height:76px;
+                        border-radius:50%;
+                        background:#E5E7EB;
+                        color:#111827;
+                        display:flex;
+                        align-items:center;
+                        justify-content:center;
+                        font-size:24px;
+                        font-weight:800;
+                        border:2px solid #3B82F6;
+                    ">
+                        UF
+                    </div>
+                    """,
+                    unsafe_allow_html=True,
+                )
+
+        with col_info:
+            st.markdown("### Usama Fiaz")
+            st.markdown(
+                "**AI Engineer** | Machine Learning | NLP | LangGraph | AI Agents"
+            )
+
+            btn_col1, btn_col2, empty_col = st.columns([1.1, 1.1, 4])
+
+            with btn_col1:
+                st.link_button(
+                    "📧 Email",
+                    "mailto:usama20010101@gmail.com",
+                    use_container_width=True,
+                )
+
+            with btn_col2:
+                st.link_button(
+                    "🔗 LinkedIn",
+                    "https://www.linkedin.com/in/usama2001/",
+                    use_container_width=True,
+                )
+
+            with empty_col:
+                st.empty()
+
+            st.caption(
+                "Portfolio ML project built using Python, Scikit-learn, XGBoost, and Streamlit. "
+                "This project demonstrates data cleaning, EDA, model comparison, threshold tuning, "
+                "prediction pipeline, and interactive ML app development."
+            )
 
 
 # -------------------------------
@@ -37,13 +165,13 @@ st.markdown(
 
         .sticky-header {
             position: sticky;
-            top: -16px;
+            top: 0;
             z-index: 9999;
             background: rgba(14, 17, 23, 0.98);
             backdrop-filter: blur(10px);
             border-bottom: 1px solid #1F2937;
-            padding: 18px 10px 18px 10px;
-            margin-bottom: 26px;
+            padding: 26px 10px 22px 10px;
+            margin-bottom: 30px;
             text-align: center;
         }
 
@@ -51,10 +179,9 @@ st.markdown(
             font-size: 38px;
             font-weight: 850;
             color: #FFFFFF;
-            margin-bottom: 6px;
+            margin-bottom: 10px;
             line-height: 1.15;
-            padding: 20px;            
-            border-bottom: 3px solid #10B981;        }
+        }
 
         .subtitle {
             font-size: 16px;
@@ -391,16 +518,19 @@ predict_button = st.button(
 )
 
 if predict_button:
-    prediction, probability, model_input_df = predict_heart_disease_risk(
+    _, probability, model_input_df = predict_heart_disease_risk(
         patient_data,
         model,
         feature_names,
     )
 
+    risk_details = get_app_risk_details(probability)
+
     st.session_state.prediction_result = {
-        "prediction": prediction,
+        "prediction": risk_details["prediction"],
         "probability": probability,
         "model_input_df": model_input_df,
+        "risk_details": risk_details,
     }
 
 if st.session_state.prediction_result is None:
@@ -411,8 +541,7 @@ else:
     prediction = st.session_state.prediction_result["prediction"]
     probability = st.session_state.prediction_result["probability"]
     model_input_df = st.session_state.prediction_result["model_input_df"]
-
-    risk_details = get_risk_details(probability)
+    risk_details = st.session_state.prediction_result["risk_details"]
 
     risk_level = risk_details["risk_level"]
     risk_message = risk_details["risk_message"]
@@ -476,14 +605,14 @@ else:
         )
 
     with st.expander("View Data Sent to Model"):
-     st.dataframe(
-        model_input_df.reset_index(drop=True),
-        use_container_width=True,
-        hide_index=True
-    )
+        st.dataframe(
+            model_input_df.reset_index(drop=True),
+            use_container_width=True,
+            hide_index=True,
+        )
 
     st.info(
-        "The model uses the same feature order that was saved during training to avoid prediction errors."
+        "The model uses the same feature order saved during training. A tuned threshold of 0.30 is used to improve recall for heart disease risk screening."
     )
 
 
@@ -539,7 +668,29 @@ performance_data = pd.DataFrame(
     }
 )
 
-st.dataframe(performance_data, use_container_width=True)
+st.dataframe(performance_data, use_container_width=True, hide_index=True)
+
+st.markdown("### Model Performance Chart")
+
+fig, ax = plt.subplots(figsize=(10, 5))
+
+performance_data.set_index("Model").plot(
+    kind="bar",
+    ax=ax,
+    edgecolor="black",
+)
+
+ax.set_title("Final Model Performance Comparison")
+ax.set_ylabel("Score")
+ax.set_xlabel("Model")
+ax.set_ylim(0, 1)
+ax.grid(axis="y", linestyle="--", alpha=0.4)
+ax.legend(loc="lower right")
+
+plt.xticks(rotation=0)
+plt.tight_layout()
+
+st.pyplot(fig)
 
 st.markdown(
     dedent(
@@ -551,6 +702,8 @@ st.markdown(
             performance compared with Logistic Regression and a single Decision Tree.
             It had the highest accuracy, precision, and F1-score while maintaining the same recall
             as the Logistic Regression baseline.
+            After threshold tuning, a 0.30 threshold is used for screening because it improves recall
+            and reduces false negatives.
             </p>
         </div>
         """
@@ -562,4 +715,4 @@ st.markdown(
 # -------------------------------
 # Footer
 # -------------------------------
-render_footer(PROJECT_ROOT)
+render_clean_footer(PROJECT_ROOT)
