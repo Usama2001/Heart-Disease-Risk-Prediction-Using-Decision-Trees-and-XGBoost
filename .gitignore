@@ -1,10 +1,15 @@
+# Virtual environment
 .venv/
+
+# Python cache files
 __pycache__/
 *.pyc
+
+# Jupyter cache
 .ipynb_checkpoints/
-models/*.pkl
 
-Code explantion.docx
-
-# Private local notes
+# Private notes and local explanation files
 private_notes/
+Code explantion*.docx
+Code explanation*.docx
+*.docx
