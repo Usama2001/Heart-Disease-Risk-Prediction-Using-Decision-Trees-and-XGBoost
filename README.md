@@ -369,6 +369,40 @@ ROC-AUC was used to evaluate how well each model separates heart disease and no-
 
 ---
 
+## Threshold Tuning
+
+The default classification threshold is usually 0.50. However, in a medical-risk prediction project, recall is very important because false negatives mean the model missed patients who actually had heart disease.
+
+Different thresholds were tested for the XGBoost model.
+
+| Threshold | Accuracy | Precision | Recall | F1-score | Confusion Matrix |
+|---:|---:|---:|---:|---:|---|
+| 0.30 | 0.8833 | 0.8387 | 0.9286 | 0.8814 | [[27, 5], [2, 26]] |
+| 0.40 | 0.8833 | 0.8889 | 0.8571 | 0.8727 | [[29, 3], [4, 24]] |
+| 0.50 | 0.8500 | 0.8800 | 0.7857 | 0.8302 | [[29, 3], [6, 22]] |
+| 0.60 | 0.8000 | 0.8636 | 0.6786 | 0.7600 | [[29, 3], [9, 19]] |
+| 0.70 | 0.7833 | 0.8571 | 0.6429 | 0.7347 | [[29, 3], [10, 18]] |
+
+The threshold of **0.30** was selected for the Streamlit app because it improved recall to **92.86%** and reduced false negatives from **6** to **2**.
+
+This means the model is better at identifying patients who may actually have heart disease, which is important for a screening-style medical risk prediction project.
+
+---
+
+## 16. Future Improvements
+
+Future improvements can include:
+
+- Hyperparameter tuning
+- Cross-validation
+- SHAP explainability
+- Online deployment
+- More medical feature explanations
+- A training script to regenerate model files
+- Model versioning
+- Docker support
+
+---
 ## Author
 
 **Usama Fiaz**  
